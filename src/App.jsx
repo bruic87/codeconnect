@@ -1,16 +1,40 @@
+import { useEffect, useState } from 'react'
 import './App.css'
 import BarraDePesquisa from './componentes/BarraDePesquisa'
+import Card from './componentes/Card'
 import Filtro from './componentes/Filtro'
 import Sidebar from './componentes/sidebar'
 
 function App() {
-  
+  const [dados, SetDados] = useState([]);
+  useEffect(() => {
+    fetch('https://my-json-server.typicode.com/MonicaHillman/codeconnect-api/publicacoes')
+    .then(resposta => resposta.json())
+    .then(dados => SetDados(dados))
+  }, [])
+
   return (
     <div className='container'>
     <Sidebar />
     <div>
       <BarraDePesquisa />  
       <Filtro/>
+      <ul className='lista-cards'>
+        {dados ? dados.map((item, index) => (
+          <li key={index}>
+            <Card 
+              id = {item.id}
+              imagemUrl = {item.imagem_capa}
+              titulo = {item.titulo}
+              resumo = {item.resumo}
+              LinhasDeCodigo = {item.linhas_de_codigo}
+              compartilhamentos = {item.compartilhamentos}
+              comentarios = {item.comentarios}
+              usuario = {item.usuario}
+            />
+          </li>
+        )) : null }
+      </ul>
     </div>
     </div>
   )
